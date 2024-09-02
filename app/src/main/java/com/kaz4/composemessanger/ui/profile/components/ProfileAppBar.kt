@@ -3,7 +3,6 @@ package com.kaz4.composemessanger.ui.profile.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -30,7 +29,6 @@ fun ProfileAppBar(
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = "Profile")
                 Image(
                     imageVector = Icons.Filled.AccountBox,
                     contentDescription = null,
@@ -38,6 +36,7 @@ fun ProfileAppBar(
                         .size(65.dp)
                         .clickable { onClick() }
                 )
+                Text(text = "Profile")
             }
         }
     )
