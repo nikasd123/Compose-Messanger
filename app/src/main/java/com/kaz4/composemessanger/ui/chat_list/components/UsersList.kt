@@ -38,7 +38,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 @Composable
-fun AcceptPendingRequestList(
+fun FriendList(
     onclick: () -> Unit = {}
 ){
     val scrollState = rememberLazyListState()
@@ -49,14 +49,14 @@ fun AcceptPendingRequestList(
         state = scrollState,
     ){
         items(users) { item ->
-            AcceptPendingRequestListView(item)
+            FriendListView(item)
         }
     }
 
 }
 
 @Composable
-fun AcceptPendingRequestListView(
+fun FriendListView(
     item: FriendItem,
     onclick: () -> Unit = {}
 ) {
@@ -208,7 +208,7 @@ fun AcceptPendingRequestListView(
 @Preview(showBackground = true)
 @Composable
 fun PreviewAcceptPendingRequestList() {
-    AcceptPendingRequestList(
+    FriendList(
         onclick = {}
     )
 }
