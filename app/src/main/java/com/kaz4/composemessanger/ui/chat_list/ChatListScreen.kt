@@ -9,7 +9,7 @@ import com.kaz4.composemessanger.ui.chat_list.components.AcceptPendingRequestLis
 import com.kaz4.composemessanger.ui.profile.components.ProfileAppBar
 
 @Composable
-fun Userlist() {
+fun UserList() {
     Column(
         modifier = Modifier
             .focusable()
@@ -26,5 +26,5 @@ fun Userlist() {
 @Preview(showBackground = true)
 @Composable
 fun PreviewUserList() {
-    Userlist()
+    UserList()
 }
