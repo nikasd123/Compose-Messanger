@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.kaz4.composemessanger"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -50,6 +50,17 @@ android {
 }
 
 dependencies {
+
+    //Accompanist
+    implementation (libs.accompanist.systemuicontroller)
+    implementation (libs.accompanist.swiperefresh)
+    implementation (libs.accompanist.pager)
+
+    // Coil
+    implementation (libs.coil.compose)
+
+    //icon
+    implementation (libs.androidx.material.icons.extended)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
