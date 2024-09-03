@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id ("kotlin-kapt")
+    id ("dagger.hilt.android.plugin")
 }
 
 android {
@@ -38,6 +40,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -59,11 +62,31 @@ dependencies {
     implementation (libs.accompanist.swiperefresh)
     implementation (libs.accompanist.pager)
 
+    //icon
+    implementation (libs.androidx.material.icons.extended)
+
     // Coil
     implementation (libs.coil.compose)
 
-    //icon
-    implementation (libs.androidx.material.icons.extended)
+    //Dagger-hilt
+    implementation (libs.hilt.android)
+    kapt (libs.hilt.android.compiler)
+    implementation (libs.androidx.hilt.navigation.compose)
+    kapt (libs.androidx.hilt.compiler)
+
+    //Retrofit
+    implementation (libs.retrofit)
+    implementation (libs.logging.interceptor)
+
+    //OkHttp
+    implementation (libs.okhttp)
+    implementation (libs.okio)
+
+    //Gson
+    implementation (libs.gson.v2101)
+    implementation (libs.converter.gson)
+
+    implementation (libs.kotlinx.coroutines.play.services)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
