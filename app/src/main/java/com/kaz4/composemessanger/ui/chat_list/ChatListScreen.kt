@@ -5,20 +5,25 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.kaz4.composemessanger.ui.chat_list.components.FriendList
 import com.kaz4.composemessanger.ui.profile.components.ProfileAppBar
 
 @Composable
-fun UserList() {
+fun UserList(
+    modifier: Modifier = Modifier,
+    navController: NavHostController = rememberNavController()
+) {
     Column(
         modifier = Modifier
             .focusable()
     ) {
         ProfileAppBar(onClick = {
-
+            navController.navigate("profile")
         })
-        FriendList(onclick = {
-
+        FriendList(onclick = { registerUUID ->
+            navController.navigate("chat/$registerUUID")
         })
     }
 }

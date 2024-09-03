@@ -1,6 +1,7 @@
 package com.kaz4.composemessanger.ui.chat.chatAppBar
 
 import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -37,6 +38,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.kaz4.composemessanger.ui.theme.spacing
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,6 +48,7 @@ fun ChatAppBar(
     modifier: Modifier = Modifier,
     title: String = "Title",
     description: String = "Description",
+    navController: NavHostController,
     onMoreDropDownBlockUserClick: (() -> Unit)? = null,
 ) {
     val context = LocalContext.current
@@ -89,6 +93,7 @@ fun ChatAppBar(
         },
         navigationIcon = {
             Icon(
+                modifier = Modifier.clickable { navController.navigateUp() },
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = "Localized description"
             )
@@ -148,6 +153,7 @@ fun PreviewChatAppBar() {
     ChatAppBar(
         title = "Chat Title",
         description = "Chat Description",
-        onMoreDropDownBlockUserClick = { println("More options clicked") }
+        onMoreDropDownBlockUserClick = { println("More options clicked") },
+        navController = rememberNavController()
     )
 }

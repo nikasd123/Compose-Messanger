@@ -22,6 +22,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.kaz4.composemessanger.ui.auth.components.BottomRouteSign
 import com.kaz4.composemessanger.ui.auth.components.ButtonSign
 import com.kaz4.composemessanger.ui.auth.components.UsernameTextField
@@ -29,10 +31,29 @@ import com.kaz4.composemessanger.ui.theme.spacing
 
 @Composable
 fun RegistrationScreen(
+    modifier: Modifier = Modifier,
+    navController: NavHostController
+) {
+    RegistrationScreenContent(
+        phoneNumber = "+7 (999) 999-99-99", //todo
+        onUsernameChange = {
+
+        },
+        onRegister = { _, _ ->
+            navController.navigate("chatList")
+        },
+        modifier = modifier,
+        navController = navController
+    )
+}
+
+@Composable
+fun RegistrationScreenContent(
     phoneNumber: String,
     onUsernameChange: (String) -> Unit,
     onRegister: (String, String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: NavHostController
 ) {
     var username by remember { mutableStateOf("") }
     var isRegistering by remember { mutableStateOf(false) }
@@ -84,7 +105,7 @@ fun RegistrationScreen(
 
         BottomRouteSign(
             onclick = {
-                //todo nav to login
+                navController.navigate("signIn")
             },
             signInOrSignUp = "Sign In",
             label = "Already have an account?"
@@ -95,8 +116,10 @@ fun RegistrationScreen(
 @Preview(showBackground = true)
 @Composable
 fun PreviewRegistrationScreen() {
-    RegistrationScreen(
+    RegistrationScreenContent(
         phoneNumber = "+7 (999) 999-99-99",
         onUsernameChange = {},
-        onRegister = { _, _ -> })
+        onRegister = { _, _ -> },
+        navController = rememberNavController()
+    )
 }

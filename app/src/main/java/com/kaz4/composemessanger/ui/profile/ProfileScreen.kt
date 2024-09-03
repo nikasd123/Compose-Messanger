@@ -32,6 +32,7 @@ import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.kaz4.composemessanger.domain.models.User
 import com.kaz4.composemessanger.domain.models.hardcodedUser
 import com.kaz4.composemessanger.ui.profile.components.ChooseProfilePicFromGallery
@@ -39,7 +40,7 @@ import com.kaz4.composemessanger.ui.profile.components.ProfileTextField
 import com.kaz4.composemessanger.ui.theme.spacing
 
 @Composable
-fun ProfileScreen(){
+fun ProfileScreen(navController: NavHostController){
     val keyboardController = LocalSoftwareKeyboardController.current
     if (keyboardController != null) {
         ProfileContent(

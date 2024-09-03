@@ -16,6 +16,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.kaz4.composemessanger.ui.auth.components.BottomRouteSign
 import com.kaz4.composemessanger.ui.auth.components.ButtonSign
 import com.kaz4.composemessanger.ui.auth.components.CodeInputField
@@ -24,10 +26,35 @@ import com.kaz4.composemessanger.ui.theme.spacing
 
 @Composable
 fun AuthorizationScreen(
+    navController: NavHostController,
+    modifier: Modifier = Modifier
+) {
+    AuthorizationScreenContent(
+        onPhoneNumberSubmit = { phoneNumber ->
+            Log.d("AAA", "phone: $phoneNumber")
+        },
+        onCountryCodeSubmit = { countryCode ->
+            Log.d("AAA", "code: $countryCode")
+        },
+        onCodeSubmit = { code ->
+            Log.d("AAA", "code: $code")
+            val isUserExist = true
+            if (isUserExist) {
+                navController.navigate("chatList")
+            } else { navController.navigate("signUp") }
+        },
+        modifier = modifier,
+        navController = navController
+    )
+}
+
+@Composable
+fun AuthorizationScreenContent(
     onPhoneNumberSubmit: (String) -> Unit,
     onCountryCodeSubmit: (String) -> Unit,
     onCodeSubmit: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: NavHostController
 ) {
     var phoneNumber by remember { mutableStateOf("") }
     var fullPhoneNumber by remember { mutableStateOf("") }
@@ -58,7 +85,7 @@ fun AuthorizationScreen(
                     fullPhoneNumber = selectedCountryCode + phoneNumber
                     onCountryCodeSubmit(selectedCountryCode)
                     onPhoneNumberSubmit(phoneNumber)
-                    if (fullPhoneNumber.length == 12){
+                    if (fullPhoneNumber.length == 12) {
                         isCodeSent = true
                     } else {
                         Toast.makeText(context, "Invalid phone number", Toast.LENGTH_SHORT).show()
@@ -84,6 +111,7 @@ fun AuthorizationScreen(
         BottomRouteSign(
             onclick = {
                 //todo nav to registration
+                navController.navigate("signUp")
             },
             signInOrSignUp = "Sign Up",
             label = "Don't have an account?"
@@ -94,9 +122,10 @@ fun AuthorizationScreen(
 @Preview(showBackground = true)
 @Composable
 fun PreviewAuthorizationScreen() {
-    AuthorizationScreen(
+    AuthorizationScreenContent(
         onPhoneNumberSubmit = {},
         onCountryCodeSubmit = {},
-        onCodeSubmit = {}
+        onCodeSubmit = {},
+        navController = rememberNavController()
     )
 }

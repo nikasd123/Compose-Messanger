@@ -9,19 +9,18 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.SoftwareKeyboardController
+import androidx.navigation.NavHostController
 import com.kaz4.composemessanger.domain.models.MessageRegister
 import com.kaz4.composemessanger.domain.models.MessageStatus
 import com.kaz4.composemessanger.domain.models.User
 import com.kaz4.composemessanger.domain.models.hardcodedMessages
+import com.kaz4.composemessanger.domain.models.users
 import com.kaz4.composemessanger.ui.chat.chatAppBar.ChatAppBar
 import com.kaz4.composemessanger.ui.chat.chatinput.ChatInput
 import com.kaz4.composemessanger.ui.chat.chatrow.ReceivedMessageRow
@@ -33,39 +32,48 @@ import java.util.Locale
 @Composable
 fun ChatScreen(
     modifier: Modifier = Modifier,
-    keyboardController: SoftwareKeyboardController
+    navController: NavHostController,
+    registerUUID: String
 ) {
-    val messages = hardcodedMessages
+    val user = users.find { it.registerUUID == registerUUID }
+
+    if (user == null) {
+        Text(text = "User not found")
+        return
+    }
+
     val opponentProfile = User(
-        userName = "John",
-        userSurName = "Doe",
-        userProfilePictureUrl = "",
+        userName = user.userName,
+        userSurName = "",
+        userProfilePictureUrl = user.userPictureUrl,
         status = "online"
     )
 
+    val messages = hardcodedMessages
+
     ChatScreenContent(
-        modifier,
-        keyboardController,
-        messages,
-        opponentProfile
+        modifier = modifier,
+        messages = messages,
+        opponentProfile = opponentProfile,
+        navController = navController,
+        registerUUID = registerUUID
     )
 }
 
 @Composable
 fun ChatScreenContent(
     modifier: Modifier = Modifier,
-    keyboardController: SoftwareKeyboardController,
     messages: List<MessageRegister>,
-    opponentProfile: User
+    opponentProfile: User,
+    navController: NavHostController,
+    registerUUID: String
 ) {
     val opponentName = opponentProfile.userName
-    val opponentSurname = opponentProfile.userSurName
     val opponentStatus = opponentProfile.status
 
     val scrollState = rememberLazyListState(initialFirstVisibleItemIndex = messages.size)
-    var isChatInputFocus by remember { mutableStateOf(false) }
 
-    LaunchedEffect(key1 = messages) {
+    LaunchedEffect(messages) {
         if (messages.isNotEmpty()) {
             scrollState.scrollToItem(index = messages.size - 1)
         }
@@ -78,11 +86,12 @@ fun ChatScreenContent(
         val context = LocalContext.current
 
         ChatAppBar(
-            title = "$opponentName $opponentSurname",
+            title = opponentName,
             description = opponentStatus.lowercase(),
             onMoreDropDownBlockUserClick = {
                 Toast.makeText(context, "User Blocked", Toast.LENGTH_SHORT).show()
-            }
+            },
+            navController = navController
         )
 
         LazyColumn(
@@ -119,11 +128,12 @@ fun ChatScreenContent(
                 .padding(
                     start = MaterialTheme.spacing.small,
                     end = MaterialTheme.spacing.small,
-                    bottom = MaterialTheme.spacing.medium),
+                    bottom = MaterialTheme.spacing.medium
+                ),
             onMessageChange = { messageContent ->
                 Toast.makeText(context, "Message Sent: $messageContent", Toast.LENGTH_SHORT).show()
             },
-            onFocusEvent = { isChatInputFocus = it }
+            onFocusEvent = {}
         )
     }
 }

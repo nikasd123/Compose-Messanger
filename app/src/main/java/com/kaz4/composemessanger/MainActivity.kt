@@ -4,12 +4,16 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.kaz4.composemessanger.ui.auth.screens.AuthorizationScreen
+import com.kaz4.composemessanger.ui.auth.screens.RegistrationScreen
 import com.kaz4.composemessanger.ui.chat.ChatScreen
+import com.kaz4.composemessanger.ui.chat_list.UserList
+import com.kaz4.composemessanger.ui.profile.ProfileScreen
 import com.kaz4.composemessanger.ui.theme.ComposeMessangerTheme
 
 class MainActivity : ComponentActivity() {
@@ -18,17 +22,26 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ComposeMessangerTheme {
-                Scaffold(
-                    modifier = Modifier.fillMaxSize()
-                ) { innerPadding ->
-                    val keyboardController = LocalSoftwareKeyboardController.current
+                val navController = rememberNavController()
+                AppNavHost(navController)
 
-                    ChatScreen(
-                        modifier = Modifier.padding(innerPadding),
-                        keyboardController = keyboardController ?: error("Keyboard controller is null")
-                    )
-                }
+
             }
         }
     }
 }
+
+@Composable
+fun AppNavHost(navController: NavHostController) {
+    NavHost(navController = navController, startDestination = "signIn") {
+        composable("signIn") { AuthorizationScreen(navController = navController) }
+        composable("signUp") { RegistrationScreen(navController = navController) }
+        composable("chatList") { UserList(navController = navController) }
+        composable("chat/{registerUUID}") { backStackEntry ->
+            val registerUUID = backStackEntry.arguments?.getString("registerUUID") ?: ""
+            ChatScreen(navController = navController, registerUUID = registerUUID)
+        }
+        composable("profile") { ProfileScreen(navController = navController) }
+    }
+}
+

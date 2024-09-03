@@ -39,7 +39,7 @@ import java.util.Locale
 
 @Composable
 fun FriendList(
-    onclick: () -> Unit = {}
+    onclick: (String) -> Unit = {}
 ){
     val scrollState = rememberLazyListState()
 
@@ -49,7 +49,7 @@ fun FriendList(
         state = scrollState,
     ){
         items(users) { item ->
-            FriendListView(item)
+            FriendListView(item, onclick)
         }
     }
 
@@ -58,12 +58,12 @@ fun FriendList(
 @Composable
 fun FriendListView(
     item: FriendItem,
-    onclick: () -> Unit = {}
+    onclick: (String) -> Unit
 ) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .clickable { onclick() }
+            .clickable { onclick(item.registerUUID) }
     ) {
         Row(
             modifier = Modifier
