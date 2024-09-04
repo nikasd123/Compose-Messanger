@@ -4,7 +4,6 @@ import com.kaz4.composemessanger.data.service.dto.request.AuthCodeRequestDto
 import com.kaz4.composemessanger.data.service.dto.request.CheckAuthCodeRequestDto
 import com.kaz4.composemessanger.data.service.dto.request.RegisterRequestDto
 import com.kaz4.composemessanger.data.service.dto.response.AuthCodeResponseDto
-import com.kaz4.composemessanger.data.service.dto.response.RegisterResponseDto
 import com.kaz4.composemessanger.data.service.dto.response.SuccessDto
 import retrofit2.Call
 import retrofit2.http.Body
@@ -19,7 +18,7 @@ interface API {
     suspend fun checkAuthCode(@Body authCodeRequestDto: CheckAuthCodeRequestDto): AuthCodeResponseDto
 
     @POST(REGISTER)
-    suspend fun register(@Body registerRequestDto: RegisterRequestDto): RegisterResponseDto
+    suspend fun register(@Body registerRequestDto: RegisterRequestDto): AuthCodeResponseDto
 
     @POST(REFRESH_TOKEN)
     fun refreshToken(): Call<AuthCodeResponseDto>

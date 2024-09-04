@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 fun PhoneNumberInputField(
     phoneNumber: String,
     onPhoneNumberChange: (String) -> Unit,
-    currentRegion: String = "+7",
+    currentRegion: String,
     placeholder: String = "Enter phone number",
     onCountryCodeChange: (String) -> Unit
 ) {
@@ -60,7 +60,7 @@ fun PhoneNumberInputField(
             onValueChange = {
                 if (it.length <= 10) {
                     text = it
-                    onPhoneNumberChange(text)
+                    onPhoneNumberChange(it)
                 }
             },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
@@ -184,6 +184,7 @@ fun PreviewPhoneNumberInputField() {
     PhoneNumberInputField(
         phoneNumber = "9219999999",
         onPhoneNumberChange = {},
-        onCountryCodeChange = {}
+        onCountryCodeChange = {},
+        currentRegion = "+7"
     )
 }

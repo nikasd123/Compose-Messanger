@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kaz4.composemessanger.domain.use_cases.AuthUseCase
+import com.kaz4.composemessanger.domain.use_cases.RegisterUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,7 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val authUseCase: AuthUseCase
+    private val authUseCase: AuthUseCase,
+    private val registerUserUseCase: RegisterUserUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(AuthState())
@@ -26,6 +28,7 @@ class AuthViewModel @Inject constructor(
             is AuthIntent.SendAuthCode -> sendAuthCode()
             is AuthIntent.EnterVerificationCode -> enterVerificationCode(intent.code, intent.phoneNumber)
             is AuthIntent.VerifyAuthCode -> verifyAuthCode()
+            is AuthIntent.RegisterUser -> registerUser(intent.phoneNumber, intent.name, intent.username)
         }
     }
 
@@ -70,6 +73,18 @@ class AuthViewModel @Inject constructor(
                 _state.update {
                     it.copy(isLoading = false, errorMessage = "Verification failed")
                 }
+            }
+        }
+    }
+
+    private fun registerUser(phoneNumber: String, name: String, username: String) {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+            val response = registerUserUseCase.registerUser(phoneNumber, name, username)
+            if (response != null) {
+                _state.update { it.copy(isLoading = false, errorMessage = null) }
+            } else {
+                _state.update { it.copy(isLoading = false, errorMessage = "Registration failed") }
             }
         }
     }

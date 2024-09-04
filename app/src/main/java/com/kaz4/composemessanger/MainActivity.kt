@@ -15,7 +15,9 @@ import com.kaz4.composemessanger.ui.chat.ChatScreen
 import com.kaz4.composemessanger.ui.chat_list.UserList
 import com.kaz4.composemessanger.ui.profile.ProfileScreen
 import com.kaz4.composemessanger.ui.theme.ComposeMessangerTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +37,10 @@ class MainActivity : ComponentActivity() {
 fun AppNavHost(navController: NavHostController) {
     NavHost(navController = navController, startDestination = "signIn") {
         composable("signIn") { AuthorizationScreen(navController = navController) }
-        composable("signUp") { RegistrationScreen(navController = navController) }
+        composable("signUp/{phoneNumber}") { backStackEntry ->
+            val phoneNumber = backStackEntry.arguments?.getString("phoneNumber") ?: ""
+            RegistrationScreen(navController = navController, phoneNumber = phoneNumber)
+        }
         composable("chatList") { UserList(navController = navController) }
         composable("chat/{registerUUID}") { backStackEntry ->
             val registerUUID = backStackEntry.arguments?.getString("registerUUID") ?: ""

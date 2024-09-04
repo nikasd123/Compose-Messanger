@@ -6,4 +6,5 @@ sealed class AuthIntent {
     data object SendAuthCode : AuthIntent()
     data class EnterVerificationCode(val code: String, val phoneNumber: String) : AuthIntent()
     data object VerifyAuthCode : AuthIntent()
+    data class RegisterUser(val phoneNumber: String, val name: String, val username: String) : AuthIntent()
 }
