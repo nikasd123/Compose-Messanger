@@ -74,6 +74,10 @@ fun AuthorizationScreenContent(
     var verificationCode by remember { mutableStateOf(state.verificationCode) }
     val context = LocalContext.current
 
+    val isPhoneNumberValid = remember(phoneNumber) {
+        phoneNumber.length >= 10
+    }
+
     Surface(
         modifier = Modifier
     ) {
@@ -96,15 +100,17 @@ fun AuthorizationScreenContent(
                         onCountryCodeSubmit(code)
                     }
                 )
+
                 ButtonSign(
                     onclick = {
-                        if (phoneNumber.isNotEmpty()) {
+                        if (isPhoneNumberValid) {
                             onSendCodeClick()
                         } else {
                             Toast.makeText(context, "Invalid phone number", Toast.LENGTH_SHORT).show()
                         }
                     },
-                    signInOrSignUp = "Send Code"
+                    signInOrSignUp = "Send Code",
+                    enabled = isPhoneNumberValid
                 )
             } else {
                 CodeInputField(
@@ -139,7 +145,9 @@ fun AuthorizationScreenContent(
 
             BottomRouteSign(
                 onclick = {
-                    navController.navigate("signUp/${state.countryCode}${state.phoneNumber}")
+                    if (isPhoneNumberValid){
+                        navController.navigate("signUp/${state.countryCode}${state.phoneNumber}")
+                    } else Toast.makeText(context, "Please, enter phone number first", Toast.LENGTH_SHORT).show()
                 },
                 signInOrSignUp = "Sign Up",
                 label = "Don't have an account?"
@@ -147,6 +155,7 @@ fun AuthorizationScreenContent(
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
