@@ -115,7 +115,7 @@ fun ProfileContent(
     var name by remember { mutableStateOf(userProfile.name) }
     var city by remember { mutableStateOf(userProfile.city) }
     val birthDate by remember { mutableStateOf(userProfile.birthday ?: "") }
-    val bio by remember { mutableStateOf(userProfile.status) }
+    var bio by remember { mutableStateOf(userProfile.status) }
     val phoneNumber by remember { mutableStateOf(userProfile.phone) }
     var avatarUri by remember { mutableStateOf<Uri?>(null) }
 
@@ -194,7 +194,7 @@ fun ProfileContent(
                 ProfileTextField(
                     entry = bio,
                     hint = "About You",
-                    onChange = { city = it }
+                    onChange = { bio = it }
                 )
 
                 Button(
