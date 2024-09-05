@@ -82,8 +82,7 @@ fun RegistrationScreenContent(
 
     Surface(
         modifier = Modifier
-    )
-    {
+    ) {
         if (isLoading) {
             Box(
                 modifier = Modifier.fillMaxSize()
@@ -167,7 +166,7 @@ fun RegistrationScreenContent(
 @Composable
 fun PreviewRegistrationScreen() {
     RegistrationScreenContent(
-        phoneNumber = "+7 (999) 999-99-99",
+        phoneNumber = "+79219999999",
         onUsernameChange = {},
         onRegister = { _, _ -> },
         navController = rememberNavController(),

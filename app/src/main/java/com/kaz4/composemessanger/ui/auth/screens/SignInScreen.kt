@@ -74,8 +74,13 @@ fun AuthorizationScreenContent(
     var verificationCode by remember { mutableStateOf(state.verificationCode) }
     val context = LocalContext.current
 
-    val isPhoneNumberValid = remember(phoneNumber) {
-        phoneNumber.length >= 10
+    val isPhoneNumberValid = remember(phoneNumber, state.countryCode) {
+        val digitCount = phoneNumber.filter { it.isDigit() }.length
+        when (state.countryCode) {
+            "+7", "+1" -> digitCount == 10
+            "+375" -> digitCount == 9
+            else -> false
+        }
     }
 
     Surface(
@@ -139,7 +144,7 @@ fun AuthorizationScreenContent(
                 }
             } else if (state.isUserExist == false) {
                 LaunchedEffect(state.isUserExist) {
-                    navController.navigate("signUp/${state.countryCode}${state.phoneNumber}")
+                    navController.navigate("signUp/${state.phoneNumber}")
                 }
             }
 
@@ -155,7 +160,6 @@ fun AuthorizationScreenContent(
         }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
