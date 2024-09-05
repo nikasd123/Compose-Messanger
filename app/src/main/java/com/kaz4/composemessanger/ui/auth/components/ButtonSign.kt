@@ -13,13 +13,15 @@ import com.kaz4.composemessanger.ui.theme.spacing
 @Composable
 fun ButtonSign(
     onclick: () -> Unit,
-    signInOrSignUp: String
+    signInOrSignUp: String,
+    enabled: Boolean = true
 ) {
     Button(
         modifier = Modifier
             .padding(top = MaterialTheme.spacing.large)
             .fillMaxWidth(),
-        onClick = { onclick() }
+        onClick = { onclick() },
+        enabled = enabled
     )
     {
         Text(

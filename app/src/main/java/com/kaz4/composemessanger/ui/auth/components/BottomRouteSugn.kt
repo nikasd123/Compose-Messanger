@@ -18,7 +18,8 @@ fun BottomRouteSign(
     modifier: Modifier = Modifier,
     onclick: () -> Unit,
     signInOrSignUp: String,
-    label: String
+    label: String,
+    enabled: Boolean = true
 ) {
     Surface(
         modifier = modifier
@@ -33,6 +34,7 @@ fun BottomRouteSign(
                 style = MaterialTheme.typography.titleSmall
             )
             TextButton(
+                enabled = enabled,
                 onClick = onclick,
                 content = {
                     Text(
