@@ -112,7 +112,6 @@ fun ProfileContent(
     onProfileUpdate: (ProfileData) -> Unit,
     onBackButton: () -> Unit
 ) {
-    // Используем mutableStateOf для локальных состояний
     var name by remember { mutableStateOf(userProfile.name) }
     var city by remember { mutableStateOf(userProfile.city) }
     val birthDate by remember { mutableStateOf(userProfile.birthday ?: "") }
