@@ -32,23 +32,23 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
             val storedProfile = profileUseCase.getStoredUserProfile()
-            //if (storedProfile != null && isValidProfile(storedProfile)) {
+            if (storedProfile != null && isValidProfile(storedProfile)) {
                 _state.update { state ->
                     state.copy(isLoading = false, userProfile = storedProfile)
                 }
-            //} else {
-            //    val userProfileResponse = profileUseCase.getUserInfo()
-            //    userProfileResponse?.profileData?.let { profileData ->
-            //        _state.update {
-            //            it.copy(isLoading = false, userProfile = profileData)
-            //        }
-            //        profileUseCase.saveUserProfileLocally(profileData)
-            //    } ?: run {
-            //        _state.update {
-            //            it.copy(isLoading = false, errorMessage = "Failed to load user profile")
-            //        }
-            //    }
-            //}
+            } else {
+                val userProfileResponse = profileUseCase.getUserInfo()
+                userProfileResponse?.profileData?.let { profileData ->
+                    _state.update {
+                        it.copy(isLoading = false, userProfile = profileData)
+                    }
+                    profileUseCase.saveUserProfileLocally(profileData)
+                } ?: run {
+                    _state.update {
+                        it.copy(isLoading = false, errorMessage = "Failed to load user profile")
+                    }
+                }
+            }
         }
     }
 
@@ -70,6 +70,14 @@ class ProfileViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun clearSuccessMessage() {
+        _state.update { it.copy(successMessage = null) }
+    }
+
+    fun clearErrorMessage() {
+        _state.update { it.copy(errorMessage = null) }
     }
 
     private fun convertToUserUpdateRequest(profileData: ProfileData): UserUpdateRequest {

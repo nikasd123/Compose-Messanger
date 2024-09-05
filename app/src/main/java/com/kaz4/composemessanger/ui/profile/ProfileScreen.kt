@@ -60,6 +60,7 @@ import com.kaz4.composemessanger.ui.theme.spacing
 @Composable
 fun ProfileScreen(navController: NavHostController, viewModel: ProfileViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsState()
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         viewModel.processIntent(ProfileIntent.LoadUserProfile)
@@ -88,12 +89,18 @@ fun ProfileScreen(navController: NavHostController, viewModel: ProfileViewModel 
             )
         }
 
-        state.errorMessage?.let { error ->
-            Toast.makeText(LocalContext.current, error, Toast.LENGTH_SHORT).show()
+        LaunchedEffect(state.successMessage) {
+            state.successMessage?.let { success ->
+                Toast.makeText(context, success, Toast.LENGTH_SHORT).show()
+                viewModel.clearSuccessMessage()
+            }
         }
 
-        state.successMessage?.let { success ->
-            Toast.makeText(LocalContext.current, success, Toast.LENGTH_SHORT).show()
+        LaunchedEffect(state.errorMessage) {
+            state.errorMessage?.let { error ->
+                Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+                viewModel.clearErrorMessage()
+            }
         }
     }
 }
@@ -105,12 +112,14 @@ fun ProfileContent(
     onProfileUpdate: (ProfileData) -> Unit,
     onBackButton: () -> Unit
 ) {
+    // Используем mutableStateOf для локальных состояний
     var name by remember { mutableStateOf(userProfile.name) }
     var city by remember { mutableStateOf(userProfile.city) }
-    var birthDate by remember { mutableStateOf(userProfile.birthday ?: "") }
-    var bio by remember { mutableStateOf(userProfile.status ?: "") }
-    var phoneNumber by remember { mutableStateOf(userProfile.phone ?: "") }
+    val birthDate by remember { mutableStateOf(userProfile.birthday ?: "") }
+    val bio by remember { mutableStateOf(userProfile.status) }
+    val phoneNumber by remember { mutableStateOf(userProfile.phone) }
     var avatarUri by remember { mutableStateOf<Uri?>(null) }
+
     val dateState = remember { mutableStateOf(birthDate) }
     val cursorPosition = remember { mutableStateOf(0) }
     var isDateFieldFocused by remember { mutableStateOf(false) }
@@ -177,11 +186,16 @@ fun ProfileContent(
                             isDateFieldFocused = false
                         }
                     }
-
                 )
                 Text(
                     text = "Zodiac Sign: $zodiacSign",
                     style = MaterialTheme.typography.titleMedium
+                )
+
+                ProfileTextField(
+                    entry = bio,
+                    hint = "About You",
+                    onChange = { city = it }
                 )
 
                 Button(
