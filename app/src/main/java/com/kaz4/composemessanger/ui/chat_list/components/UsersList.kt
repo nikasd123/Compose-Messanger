@@ -1,12 +1,12 @@
 package com.kaz4.composemessanger.ui.chat_list.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -60,10 +60,14 @@ fun FriendListView(
     item: FriendItem,
     onclick: (String) -> Unit
 ) {
+    val backgroundColor = MaterialTheme.colorScheme.surface
+    val contentColor = MaterialTheme.colorScheme.onSurface
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .clickable { onclick(item.registerUUID) }
+            .background(backgroundColor)
     ) {
         Row(
             modifier = Modifier
@@ -83,11 +87,12 @@ fun FriendListView(
                     contentDescription = null,
                     modifier = Modifier
                         .padding(4.dp)
-                        .aspectRatio(1f)
                 )
             }
+
             Box(modifier = Modifier.fillMaxSize()) {
                 val sdf = remember { SimpleDateFormat("hh:mm", Locale.ROOT) }
+
                 if (item.lastMessage.status == "received" && item.lastMessage.profileUUID == item.userUUID) {
                     Row(
                         modifier = Modifier
@@ -100,21 +105,21 @@ fun FriendListView(
                             Text(
                                 text = item.userName,
                                 style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
+                                color = contentColor // Цвет текста
                             )
                             Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
                             Text(
                                 text = item.lastMessage.message,
                                 style = MaterialTheme.typography.titleSmall,
+                                color = contentColor
                             )
                         }
                         Column {
                             Text(
                                 text = sdf.format(item.lastMessage.date),
                                 style = MaterialTheme.typography.titleSmall,
-                                color = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier
-                                    .align(Alignment.CenterHorizontally)
+                                color = MaterialTheme.colorScheme.primary
                             )
 
                             Icon(
@@ -130,56 +135,35 @@ fun FriendListView(
                 } else {
                     val dateTimeControl: Long = 0
                     if (item.lastMessage.date != dateTimeControl) {
-                        if (item.lastMessage.profileUUID != item.userUUID) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(start = MaterialTheme.spacing.small),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Column {
-                                    Text(
-                                        text = item.userName,
-                                        style = MaterialTheme.typography.titleMedium,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                    Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
-                                    Text(
-                                        text = "Me: ${item.lastMessage.message}",
-                                        style = MaterialTheme.typography.titleSmall,
-                                    )
-                                }
+                        Row(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(start = MaterialTheme.spacing.small),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Column {
                                 Text(
-                                    text = sdf.format(item.lastMessage.date),
-                                    style = MaterialTheme.typography.titleSmall
+                                    text = item.userName,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    color = contentColor
+                                )
+                                Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
+                                Text(
+                                    text = if (item.lastMessage.profileUUID != item.userUUID)
+                                        "Me: ${item.lastMessage.message}"
+                                    else
+                                        "Last Message: ${item.lastMessage.message}",
+                                    style = MaterialTheme.typography.titleSmall,
+                                    color = contentColor
                                 )
                             }
-                        } else {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(start = MaterialTheme.spacing.small),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Column {
-                                    Text(
-                                        text = item.userName,
-                                        style = MaterialTheme.typography.titleMedium,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                    Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
-                                    Text(
-                                        text = "Last Message: ${item.lastMessage.message}",
-                                        style = MaterialTheme.typography.titleSmall,
-                                    )
-                                }
-                                Text(
-                                    text = sdf.format(item.lastMessage.date),
-                                    style = MaterialTheme.typography.titleSmall
-                                )
-                            }
+                            Text(
+                                text = sdf.format(item.lastMessage.date),
+                                style = MaterialTheme.typography.titleSmall,
+                                color = contentColor
+                            )
                         }
                     } else {
                         Box(
@@ -191,6 +175,7 @@ fun FriendListView(
                                 text = item.userName,
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
+                                color = contentColor,
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier
                                     .align(Alignment.Center)
@@ -203,7 +188,6 @@ fun FriendListView(
         }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
