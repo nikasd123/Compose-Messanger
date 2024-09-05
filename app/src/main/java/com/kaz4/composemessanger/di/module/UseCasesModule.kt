@@ -1,8 +1,10 @@
 package com.kaz4.composemessanger.di.module
 
 import com.kaz4.composemessanger.domain.repository.AuthRepository
+import com.kaz4.composemessanger.domain.repository.ProfileRepository
 import com.kaz4.composemessanger.domain.repository.SharedPreferencesRepository
 import com.kaz4.composemessanger.domain.use_cases.AuthUseCase
+import com.kaz4.composemessanger.domain.use_cases.ProfileUseCase
 import com.kaz4.composemessanger.domain.use_cases.RegisterUserUseCase
 import dagger.Module
 import dagger.Provides
@@ -27,5 +29,12 @@ class UseCasesModule {
         authRepository: AuthRepository,
         sharedPreferencesRepository: SharedPreferencesRepository
     ): RegisterUserUseCase = RegisterUserUseCase(authRepository, sharedPreferencesRepository)
+
+    @Provides
+    @Singleton
+    fun provideProfileUseCase(
+        profileRepository: ProfileRepository,
+        sharedPreferencesRepository: SharedPreferencesRepository
+    ): ProfileUseCase = ProfileUseCase(profileRepository, sharedPreferencesRepository)
 
 }

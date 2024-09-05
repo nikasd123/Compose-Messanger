@@ -29,8 +29,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
-import coil.request.ImageRequest
-import com.kaz4.composemessanger.R
 
 
 @Composable
@@ -41,12 +39,8 @@ fun ChooseProfilePicFromGallery(
 ) {
     val context = LocalContext.current
 
-    var imageUri by remember {
-        mutableStateOf<Uri?>(null)
-    }
-    var bitmap by remember {
-        mutableStateOf<Bitmap?>(null)
-    }
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
+    var bitmap by remember { mutableStateOf<Bitmap?>(null) }
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
@@ -94,10 +88,8 @@ fun ChooseProfilePicFromGallery(
 //                        .clip(CircleShape),
                     contentScale = ContentScale.Crop)
             } else {
-                Image(painter = rememberAsyncImagePainter(
-                    model = ImageRequest.Builder(context).data(R.mipmap.ic_launcher_round)
-                        .build()
-                ),
+                Image(
+                    imageVector = Icons.Filled.AccountCircle,
                     contentDescription = null,
                     modifier = Modifier
 //                        .padding(MaterialTheme.spacing.medium)

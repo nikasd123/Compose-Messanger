@@ -2,9 +2,11 @@ package com.kaz4.composemessanger.di.module
 
 import android.content.Context
 import com.kaz4.composemessanger.data.service.AuthRepositoryImpl
+import com.kaz4.composemessanger.data.service.ProfileRepositoryImpl
 import com.kaz4.composemessanger.data.service.api.API
 import com.kaz4.composemessanger.data.storage.SharedPreferencesRepositoryImpl
 import com.kaz4.composemessanger.domain.repository.AuthRepository
+import com.kaz4.composemessanger.domain.repository.ProfileRepository
 import com.kaz4.composemessanger.domain.repository.SharedPreferencesRepository
 import dagger.Module
 import dagger.Provides
@@ -20,6 +22,10 @@ class RepositoryModule {
     @Provides
     @Singleton
     fun provideAuthRepository(api: API): AuthRepository = AuthRepositoryImpl(api)
+
+    @Provides
+    @Singleton
+    fun provideProfileRepository(api: API): ProfileRepository = ProfileRepositoryImpl(api)
 
     @Provides
     @Singleton

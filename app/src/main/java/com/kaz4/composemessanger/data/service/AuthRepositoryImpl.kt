@@ -21,7 +21,7 @@ class AuthRepositoryImpl @Inject constructor(
         try {
             val requestModel = AuthCodeRequestDto(phoneNumber)
             val response = api.sendAuthCode(requestModel)
-            return@withContext response.isSuccess
+            return@withContext response?.isSuccess
         } catch (e: HttpException) {
             Log.e("HTTP_EXCEPTION", "HTTP error ${e.code()}: ${e.message()}")
             return@withContext null
@@ -41,7 +41,7 @@ class AuthRepositoryImpl @Inject constructor(
             try {
                 val requestModel = CheckAuthCodeRequestDto(phoneNumber, authCode)
                 val response = api.checkAuthCode(requestModel)
-                return@withContext response.toDomain()
+                return@withContext response?.toDomain()
             } catch (e: HttpException) {
                 Log.e("HTTP_EXCEPTION", "HTTP error ${e.code()}: ${e.message()}")
                 return@withContext null
@@ -63,7 +63,7 @@ class AuthRepositoryImpl @Inject constructor(
             val requestModel =
                 RegisterRequestDto(phone = phoneNumber, name = name, userName = userName)
             val response = api.register(requestModel)
-            return@withContext response.toDomain()
+            return@withContext response?.toDomain()
         } catch (e: HttpException) {
             Log.e("HTTP_EXCEPTION", "HTTP error ${e.code()}: ${e.message()}")
             return@withContext null

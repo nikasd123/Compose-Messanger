@@ -1,14 +1,16 @@
 package com.kaz4.composemessanger.di.base
 
 import com.kaz4.composemessanger.data.service.api.API
+import com.kaz4.composemessanger.data.service.dto.request.RefreshTokenRequestDto
+import com.kaz4.composemessanger.data.service.dto.response.AuthCodeResponseDto
 import com.kaz4.composemessanger.di.AuthTokenStorage
 import com.kaz4.composemessanger.di.AuthTokenStorageImpl
-import com.kaz4.composemessanger.di.TokenAuthenticator
 import com.kaz4.composemessanger.di.TokenServiceHolder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -20,11 +22,11 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object WebModule {
-
     private const val BASE_URL = "https://plannerok.ru/api/v1/"
     private const val SEND_AUTH_CODE = "/users/send-auth-code/"
     private const val CHECK_AUTH_CODE = "/users/check-auth-code/"
     private const val REGISTER = "/users/register/"
+    private const val REFRESH_TOKEN = "/users/refresh-token/"
 
     @Singleton
     @Provides
@@ -42,22 +44,23 @@ object WebModule {
             .build()
     }
 
-    private fun authInterceptor(authTokenStorage: AuthTokenStorage): Interceptor = Interceptor { chain ->
-        val request = chain.request()
+    private fun createAuthInterceptor(authTokenStorage: AuthTokenStorage): Interceptor {
+        return Interceptor { chain ->
+            val request = chain.request()
+            val newRequest: Request = if (request.url.encodedPath.contains(SEND_AUTH_CODE)
+                || request.url.encodedPath.contains(CHECK_AUTH_CODE)
+                || request.url.encodedPath.contains(REGISTER)
+            ) {
+                request.newBuilder().build()
+            } else {
+                val token = authTokenStorage.authTokenWithoutBearer
+                request.newBuilder()
+                    .addHeader("Authorization", "Bearer $token")
+                    .build()
+            }
 
-        val newRequest: Request = if (request.url.encodedPath.contains(SEND_AUTH_CODE)
-            || request.url.encodedPath.contains(CHECK_AUTH_CODE)
-            || request.url.encodedPath.contains(REGISTER)
-        ) {
-            request.newBuilder().build()
-        } else {
-            val token = authTokenStorage.authTokenWithoutBearer
-            request.newBuilder()
-                .addHeader("Authorization", "Bearer $token")
-                .build()
+            chain.proceed(newRequest)
         }
-
-        chain.proceed(newRequest)
     }
 
     @Singleton
@@ -66,15 +69,50 @@ object WebModule {
 
     @Singleton
     @Provides
-    fun providesOkHttpClient(
-        httpLoggingInterceptor: HttpLoggingInterceptor,
-        authTokenStorage: AuthTokenStorage,
-        tokenServiceHolder: TokenServiceHolder
+    fun providesOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor,
+                             authTokenStorage: AuthTokenStorage,
+                             tokenServiceHolder: TokenServiceHolder
     ): OkHttpClient = OkHttpClient.Builder()
         .addInterceptor(httpLoggingInterceptor)
-        .addInterceptor(authInterceptor(authTokenStorage))
-        .authenticator(TokenAuthenticator(authTokenStorage, tokenServiceHolder))
+        .addInterceptor(createAuthInterceptor(authTokenStorage))
+        //.addInterceptor(errorInterceptor(authTokenStorage, tokenServiceHolder)) // Добавляем новый interceptor
         .build()
+
+    private fun errorInterceptor(authTokenStorage: AuthTokenStorage, tokenServiceHolder: TokenServiceHolder): Interceptor {
+        return Interceptor { chain ->
+            val originalRequest = chain.request()
+            val response = chain.proceed(originalRequest)
+
+            if (response.code == 500) {
+                // Обновляем токен
+                val newTokenData = refreshToken(authTokenStorage, tokenServiceHolder)
+                if (newTokenData != null) {
+                    authTokenStorage.authToken = newTokenData.accessToken ?: ""
+                    authTokenStorage.refreshToken = newTokenData.refreshToken ?: ""
+
+                    // Повторяем запрос с новым токеном
+                    val newRequest = originalRequest.newBuilder()
+                        .header("Authorization", "Bearer ${authTokenStorage.authTokenWithoutBearer}")
+                        .build()
+                    return@Interceptor chain.proceed(newRequest)
+                }
+            }
+
+            return@Interceptor response
+        }
+    }
+
+    private fun refreshToken(authTokenStorage: AuthTokenStorage, tokenServiceHolder: TokenServiceHolder): AuthCodeResponseDto? {
+        return try {
+            runBlocking {
+                val refreshTokenRequest = RefreshTokenRequestDto(refreshToken = authTokenStorage.refreshToken)
+                val response = tokenServiceHolder.tokenService?.refreshToken(refreshTokenRequest)
+                response
+            }
+        } catch (e: Exception) {
+            null
+        }
+    }
 
     @Singleton
     @Provides

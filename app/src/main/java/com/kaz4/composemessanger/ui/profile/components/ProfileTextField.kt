@@ -13,7 +13,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import com.kaz4.composemessanger.ui.theme.spacing
 
@@ -22,7 +24,10 @@ fun ProfileTextField(
     entry: String,
     hint: String,
     onChange: (String) -> Unit = {},
-    keyboardType: KeyboardType = KeyboardType.Text
+    keyboardType: KeyboardType = KeyboardType.Text,
+    modifier: Modifier = Modifier,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    keyboardController: SoftwareKeyboardController? = null
 ) {
     var isNameChange by remember {
         mutableStateOf(false)
@@ -36,7 +41,7 @@ fun ProfileTextField(
     text = entry
 
     OutlinedTextField(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .wrapContentHeight()
             .padding(top = MaterialTheme.spacing.medium),
@@ -49,7 +54,7 @@ fun ProfileTextField(
         },
         singleLine = isSingleLine(hint),
         maxLines = initProfileMaxLines(hint),
-        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+        keyboardOptions = KeyboardOptions(keyboardType = keyboardType)
     )
 }
 

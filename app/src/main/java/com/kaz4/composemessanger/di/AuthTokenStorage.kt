@@ -1,5 +1,6 @@
 package com.kaz4.composemessanger.di
 
+import android.util.Log
 import com.kaz4.composemessanger.domain.repository.SharedPreferencesRepository
 import javax.inject.Inject
 
@@ -17,16 +18,23 @@ class AuthTokenStorageImpl @Inject constructor(
 
     override var authToken: String
         get() {
-            val authToken = preferences.getToken().orEmpty()
-            return "$TOKEN_TYPE $authToken"
+            val token = preferences.getToken().orEmpty()
+            Log.d("AuthTokenStorage", "Getting auth token: $token")
+            return "$TOKEN_TYPE $token"
         }
         set(value) {
+            Log.d("AuthTokenStorage", "Setting auth token: $value")
             preferences.setToken(value)
         }
 
     override var refreshToken: String
-        get() = preferences.getRefreshToken()
+        get() {
+            val token = preferences.getRefreshToken()
+            Log.d("AuthTokenStorage","Getting refresh token: $token")
+            return token
+        }
         set(value) {
+            Log.d("AuthTokenStorage", "Setting refresh token: $value")
             preferences.setRefreshToken(value)
         }
 
