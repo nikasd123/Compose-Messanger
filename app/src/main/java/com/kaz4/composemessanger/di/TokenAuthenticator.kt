@@ -46,12 +46,13 @@ class TokenAuthenticator(
         return try {
             runBlocking {
                 val refreshTokenRequest = RefreshTokenRequestDto(refreshToken = authTokenStorage.refreshToken)
+                Log.d("TokenAuthenticator", "Sending refreshTokenRequest: ${refreshTokenRequest.refreshToken}")
                 val response = tokenServiceHolder.tokenService?.refreshToken(refreshTokenRequest)
-                Log.d("AAA", "TokenAuthenticator: refreshToken response = $response")
+                Log.d("TokenAuthenticator", "Token refresh response: $response")
                 response
             }
         } catch (e: Exception) {
-            Log.d("AAA", "TokenAuthenticator: refreshToken Exception: ${e.message}")
+            Log.d("TokenAuthenticator", "Error refreshing token: ${e.message}")
             null
         }
     }
