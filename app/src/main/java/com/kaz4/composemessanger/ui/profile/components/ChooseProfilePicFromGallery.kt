@@ -70,10 +70,8 @@ fun ChooseProfilePicFromGallery(
                 painter = rememberAsyncImagePainter(bitmap),
                 contentDescription = null,
                 modifier = Modifier
-//                    .padding(MaterialTheme.spacing.medium)
                     .clickable { launcher.launch("image/*") }
                     .size(size),
-//                    .clip(CircleShape),
                 contentScale = ContentScale.Crop
             )
         } else {
@@ -82,21 +80,16 @@ fun ChooseProfilePicFromGallery(
                     imageVector = Icons.Filled.AccountCircle,
                     contentDescription = null,
                     modifier = Modifier
-//                        .padding(MaterialTheme.spacing.medium)
                         .clickable { launcher.launch("image/*") }
                         .size(size),
-//                        .clip(CircleShape),
                     contentScale = ContentScale.Crop)
             } else {
                 Image(
                     imageVector = Icons.Filled.AccountCircle,
                     contentDescription = null,
                     modifier = Modifier
-//                        .padding(MaterialTheme.spacing.medium)
                         .clickable { launcher.launch("image/*") }
                         .size(size),
-//                        .clip(CircleShape)
-//                        .border(2.dp, Color.Gray, CircleShape),
                     contentScale = ContentScale.Crop)
             }
         }

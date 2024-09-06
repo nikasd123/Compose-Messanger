@@ -26,7 +26,8 @@ import androidx.compose.ui.tooling.preview.Preview
 fun UsernameTextField(
     entry: String,
     hint: String,
-    onChange: (String) -> Unit = {}
+    onChange: (String) -> Unit = {},
+    readOnly: Boolean = false
 ) {
     var text by remember { mutableStateOf(entry) }
 
@@ -41,6 +42,7 @@ fun UsernameTextField(
                 onChange(newText)
             }
         },
+        readOnly = readOnly,
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.AccountCircle,

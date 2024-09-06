@@ -31,7 +31,6 @@ fun ProfileTextField(
     visualTransformation: VisualTransformation = VisualTransformation.None
 ) {
     var isNameChange by remember { mutableStateOf(false) }
-    var isFocusChange by remember { mutableStateOf(false) }
     var text by remember { mutableStateOf(entry) }
 
     OutlinedTextField(

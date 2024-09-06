@@ -21,7 +21,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -139,7 +138,7 @@ fun AuthorizationScreenContent(
                 Text(
                     text = state.errorMessage,
                     color = Color.Red,
-                    modifier = Modifier.padding(top = 16.dp)
+                    modifier = Modifier.padding(top = MaterialTheme.spacing.medium)
                 )
             }
 

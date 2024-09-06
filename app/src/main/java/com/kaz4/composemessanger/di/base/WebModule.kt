@@ -26,7 +26,6 @@ object WebModule {
     private const val SEND_AUTH_CODE = "/users/send-auth-code/"
     private const val CHECK_AUTH_CODE = "/users/check-auth-code/"
     private const val REGISTER = "/users/register/"
-    private const val REFRESH_TOKEN = "/users/refresh-token/"
 
     @Singleton
     @Provides

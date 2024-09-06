@@ -3,7 +3,6 @@ package com.kaz4.composemessanger.data.service
 import android.util.Log
 import com.kaz4.composemessanger.data.service.api.API
 import com.kaz4.composemessanger.data.service.dto.request.toDomain
-import com.kaz4.composemessanger.data.service.dto.response.ProfileDataResponseDto
 import com.kaz4.composemessanger.data.service.dto.response.toDomain
 import com.kaz4.composemessanger.domain.models.ProfileData
 import com.kaz4.composemessanger.domain.models.UserProfileResponse
@@ -53,25 +52,6 @@ class ProfileRepositoryImpl @Inject constructor(
             return@withContext null
         }
     }
-
-    private fun convertToProfileDataResponseDto(userUpdateRequest: UserUpdateRequest): ProfileDataResponseDto =
-        ProfileDataResponseDto(
-            name = userUpdateRequest.name,
-            username = userUpdateRequest.username,
-            birthday = userUpdateRequest.birthday,
-            city = userUpdateRequest.city,
-            vk = userUpdateRequest.vk,
-            instagram = userUpdateRequest.instagram,
-            status = userUpdateRequest.status,
-            avatar = userUpdateRequest.avatar.filename,
-            id = null,
-            last = null,
-            online = null,
-            created = null,
-            phone = null,
-            completedTask = null,
-            avatars = null
-        )
 
     private fun handleHttpException(e: HttpException) {
         Log.e("HTTP_EXCEPTION", "HTTP error ${e.code()}: ${e.message}")

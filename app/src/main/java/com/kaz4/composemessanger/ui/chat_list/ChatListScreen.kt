@@ -16,7 +16,6 @@ import com.kaz4.composemessanger.ui.theme.ComposeMessangerTheme
 
 @Composable
 fun UserList(
-    modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
 ) {
     val backgroundColor = if (isSystemInDarkTheme()) {

@@ -62,4 +62,5 @@
     <string name="load_profile_error">Не удалось загрузить профиль</string>
     <string name="update_profile_error">Не удалось обновить профиль</string>
     <string name="load_profile_success">Профиль успешно обновлен</string>
+    <string name="online">онлайн</string>
 </resources>

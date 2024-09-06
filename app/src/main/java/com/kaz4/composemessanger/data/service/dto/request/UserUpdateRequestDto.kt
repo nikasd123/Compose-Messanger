@@ -1,8 +1,6 @@
 package com.kaz4.composemessanger.data.service.dto.request
 
 import com.google.gson.annotations.SerializedName
-import com.kaz4.composemessanger.domain.models.Avatar
-import com.kaz4.composemessanger.domain.models.UserUpdateRequest
 
 data class UserUpdateRequestDto(
     @SerializedName("name")
@@ -28,15 +26,4 @@ data class UserUpdateRequestDto(
 
     @SerializedName("avatar")
     val avatar: AvatarDto?
-)
-
-internal fun UserUpdateRequestDto.toDomain() = UserUpdateRequest(
-    name = name ?: "",
-    username = username ?: "",
-    birthday = birthday ?: "",
-    city = city ?: "",
-    vk = vk ?: "",
-    instagram = instagram ?: "",
-    status = status ?: "",
-    avatar = avatar?.toDomain() ?: Avatar("", "")
 )

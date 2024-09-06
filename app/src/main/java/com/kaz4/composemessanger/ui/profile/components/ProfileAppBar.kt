@@ -69,7 +69,7 @@ fun PreviewProfileAppBar() {
     ProfileAppBar {}
 }
 
-@Preview()
+@Preview
 @Composable
 fun PreviewDarkProfileAppBar() {
     ComposeMessangerTheme(darkTheme = true) {

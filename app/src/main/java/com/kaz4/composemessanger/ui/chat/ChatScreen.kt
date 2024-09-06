@@ -34,7 +34,6 @@ import java.util.Locale
 
 @Composable
 fun ChatScreen(
-    modifier: Modifier = Modifier,
     navController: NavHostController,
     registerUUID: String
 ) {
@@ -49,27 +48,23 @@ fun ChatScreen(
         userName = user.userName,
         userSurName = "",
         userProfilePictureUrl = user.userPictureUrl,
-        status = "online"
+        status = stringResource(id = R.string.online)
     )
 
     val messages = hardcodedMessages
 
     ChatScreenContent(
-        modifier = modifier,
         messages = messages,
         opponentProfile = opponentProfile,
-        navController = navController,
-        registerUUID = registerUUID
+        navController = navController
     )
 }
 
 @Composable
 fun ChatScreenContent(
-    modifier: Modifier = Modifier,
     messages: List<MessageRegister>,
     opponentProfile: User,
-    navController: NavHostController,
-    registerUUID: String
+    navController: NavHostController
 ) {
     val opponentName = opponentProfile.userName
     val opponentStatus = opponentProfile.status
