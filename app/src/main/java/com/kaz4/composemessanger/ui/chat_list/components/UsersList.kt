@@ -106,7 +106,7 @@ fun FriendListView(
                                 text = item.userName,
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
-                                color = contentColor // Цвет текста
+                                color = contentColor
                             )
                             Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
                             Text(

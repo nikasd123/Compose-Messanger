@@ -25,10 +25,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.kaz4.composemessanger.R
 import com.kaz4.composemessanger.ui.auth.AuthIntent
 import com.kaz4.composemessanger.ui.auth.AuthViewModel
 import com.kaz4.composemessanger.ui.auth.components.BottomRouteSign
@@ -78,6 +80,9 @@ fun RegistrationScreenContent(
     var name by remember { mutableStateOf("") }
     var isRegistering by remember { mutableStateOf(false) }
 
+    val userNameLengthError = stringResource(id = R.string.username_length_error)
+    val fillAllFieldsError = stringResource(id = R.string.fill_all_fields)
+
     val context = LocalContext.current
 
     Surface(
@@ -102,7 +107,7 @@ fun RegistrationScreenContent(
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = phoneNumber,
-                label = { Text(text = "Phone Number") },
+                label = { Text(text = stringResource(id = R.string.phone_number)) },
                 onValueChange = {},
                 readOnly = true,
                 leadingIcon = {
@@ -116,21 +121,21 @@ fun RegistrationScreenContent(
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = name,
-                label = { Text(text = "Name") },
+                label = { Text(text = stringResource(id = R.string.name)) },
                 onValueChange = { newName ->
                     name = newName
                 },
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Filled.Abc,
-                        contentDescription = "name"
+                        contentDescription = stringResource(id = R.string.name)
                     )
                 }
             )
 
             UsernameTextField(
                 entry = username,
-                hint = "Enter your username",
+                hint = stringResource(id = R.string.enter_username),
                 onChange = { newUsername ->
                     username = newUsername
                     onUsernameChange(newUsername)
@@ -140,23 +145,23 @@ fun RegistrationScreenContent(
             ButtonSign(
                 onclick = {
                     if (username.length < 5) {
-                        Toast.makeText(context, "Username must be at least 5 characters long", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, userNameLengthError, Toast.LENGTH_SHORT).show()
                     } else if (name.isNotBlank()) {
                         onRegister(name, username)
                         isRegistering = true
                     } else {
-                        Toast.makeText(context, "Please fill all fields", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, fillAllFieldsError, Toast.LENGTH_SHORT).show()
                     }
                 },
-                signInOrSignUp = "Register"
+                signInOrSignUp = stringResource(id = R.string.register)
             )
 
             BottomRouteSign(
                 onclick = {
                     navController.navigate("signIn")
                 },
-                signInOrSignUp = "Sign In",
-                label = "Already have an account?"
+                signInOrSignUp = stringResource(id = R.string.sign_in),
+                label = stringResource(id = R.string.already_have_account)
             )
         }
     }

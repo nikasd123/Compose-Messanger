@@ -10,15 +10,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
+import com.kaz4.composemessanger.R
 
 @Composable
 fun CodeInputField(
     code: String,
     onCodeChange: (String) -> Unit,
-    placeholder: String = "Enter SMS code"
+    placeholder: String = stringResource(id = R.string.enter_sms_code)
 ) {
     var text by remember { mutableStateOf(code) }
 

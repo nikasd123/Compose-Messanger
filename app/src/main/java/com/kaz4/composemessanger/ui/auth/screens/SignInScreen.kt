@@ -19,11 +19,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.kaz4.composemessanger.R
 import com.kaz4.composemessanger.ui.auth.AuthIntent
 import com.kaz4.composemessanger.ui.auth.AuthState
 import com.kaz4.composemessanger.ui.auth.AuthViewModel
@@ -74,6 +76,9 @@ fun AuthorizationScreenContent(
     var verificationCode by remember { mutableStateOf(state.verificationCode) }
     val context = LocalContext.current
 
+    val invalidProneNumberError = stringResource(id = R.string.invalid_phone_number)
+    val noPhoneNumberError = stringResource(id = R.string.please_enter_phone_number)
+
     val isPhoneNumberValid = remember(phoneNumber, state.countryCode) {
         val digitCount = phoneNumber.filter { it.isDigit() }.length
         when (state.countryCode) {
@@ -111,10 +116,10 @@ fun AuthorizationScreenContent(
                         if (isPhoneNumberValid) {
                             onSendCodeClick()
                         } else {
-                            Toast.makeText(context, "Invalid phone number", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, invalidProneNumberError, Toast.LENGTH_SHORT).show()
                         }
                     },
-                    signInOrSignUp = "Send Code",
+                    signInOrSignUp = stringResource(id = R.string.send_code),
                     enabled = isPhoneNumberValid
                 )
             } else {
@@ -126,7 +131,7 @@ fun AuthorizationScreenContent(
                 )
                 ButtonSign(
                     onclick = { onCodeSubmit(verificationCode, state.countryCode + phoneNumber) },
-                    signInOrSignUp = "Verify"
+                    signInOrSignUp = stringResource(id = R.string.verify)
                 )
             }
 
@@ -152,14 +157,15 @@ fun AuthorizationScreenContent(
                 onclick = {
                     if (isPhoneNumberValid){
                         navController.navigate("signUp/${state.countryCode}${state.phoneNumber}")
-                    } else Toast.makeText(context, "Please, enter phone number first", Toast.LENGTH_SHORT).show()
+                    } else Toast.makeText(context, noPhoneNumberError, Toast.LENGTH_SHORT).show()
                 },
-                signInOrSignUp = "Sign Up",
-                label = "Don't have an account?"
+                signInOrSignUp = stringResource(id = R.string.sign_up),
+                label = stringResource(id = R.string.dont_have_account)
             )
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable

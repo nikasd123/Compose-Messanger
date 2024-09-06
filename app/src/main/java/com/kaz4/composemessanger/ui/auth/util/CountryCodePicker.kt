@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.kaz4.composemessanger.R
 
@@ -50,7 +51,7 @@ fun CountryCodePicker(
                     .requiredHeight(20.dp)
                     .requiredWidth(30.dp),
                 painter = painterResource(id = flagRes),
-                contentDescription = "Flag",
+                contentDescription = stringResource(id = R.string.flag),
                 contentScale = ContentScale.Crop
             )
             Icon(
@@ -68,14 +69,14 @@ fun CountryCodePicker(
                     onCountryCodeChange("+1")
                     expanded = false
                 },
-                text = { Text(text = "USA") },
+                text = { Text(text = stringResource(id = R.string.country_usa)) },
                 leadingIcon = {
                     Image(
                         modifier = Modifier
                             .requiredHeight(10.dp)
                             .requiredWidth(15.dp),
                         painter = painterResource(id = R.drawable.ic_flag_us),
-                        contentDescription = "flag USA",
+                        contentDescription = stringResource(id = R.string.flag_description_us),
                         contentScale = ContentScale.Crop
                     )
                 }
@@ -85,14 +86,14 @@ fun CountryCodePicker(
                     onCountryCodeChange("+7")
                     expanded = false
                 },
-                text = { Text(text = "Russia") },
+                text = { Text(text = stringResource(id = R.string.country_russia)) },
                 leadingIcon = {
                     Image(
                         modifier = Modifier
                             .requiredHeight(10.dp)
                             .requiredWidth(15.dp),
                         painter = painterResource(id = R.drawable.ic_flag_ru),
-                        contentDescription = "flag Russia",
+                        contentDescription = stringResource(id = R.string.flag_description_russia),
                         contentScale = ContentScale.Crop
                     )
                 }
@@ -102,14 +103,14 @@ fun CountryCodePicker(
                     onCountryCodeChange("+375")
                     expanded = false
                 },
-                text = { Text(text = "Belarus") },
+                text = { Text(text = stringResource(id = R.string.country_belarus)) },
                 leadingIcon = {
                     Image(
                         modifier = Modifier
                             .requiredHeight(10.dp)
                             .requiredWidth(15.dp),
                         painter = painterResource(id = R.drawable.ic_flag_by),
-                        contentDescription = "flag Belarus",
+                        contentDescription = stringResource(id = R.string.flag_description_belarus),
                         contentScale = ContentScale.Crop
                     )
                 }

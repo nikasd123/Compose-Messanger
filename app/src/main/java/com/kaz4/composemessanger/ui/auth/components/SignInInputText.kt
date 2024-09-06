@@ -13,8 +13,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
+import com.kaz4.composemessanger.R
 import com.kaz4.composemessanger.ui.auth.util.CountryCodePicker
 import com.kaz4.composemessanger.ui.auth.util.phoneNumberVisualTransformation
 
@@ -23,7 +25,7 @@ fun PhoneNumberInputField(
     phoneNumber: String,
     onPhoneNumberChange: (String) -> Unit,
     currentRegion: String,
-    placeholder: String = "Enter phone number",
+    placeholder: String = stringResource(id = R.string.enter_phone_number),
     onCountryCodeChange: (String) -> Unit
 ) {
     var selectedCountryCode by remember { mutableStateOf(currentRegion) }

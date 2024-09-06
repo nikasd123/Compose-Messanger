@@ -18,8 +18,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.kaz4.composemessanger.R
 import com.kaz4.composemessanger.ui.theme.ComposeMessangerTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,7 +49,7 @@ fun ProfileAppBar(
                         .clickable { onClick() }
                 )
                 Text(
-                    text = "Profile",
+                    text = stringResource(id = R.string.profile),
                     style = MaterialTheme.typography.titleLarge
                 )
             }

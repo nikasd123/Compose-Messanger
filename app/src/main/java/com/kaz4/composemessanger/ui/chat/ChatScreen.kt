@@ -15,7 +15,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
+import com.kaz4.composemessanger.R
 import com.kaz4.composemessanger.domain.models.MessageRegister
 import com.kaz4.composemessanger.domain.models.MessageStatus
 import com.kaz4.composemessanger.domain.models.User
@@ -38,7 +40,7 @@ fun ChatScreen(
     val user = users.find { it.registerUUID == registerUUID }
 
     if (user == null) {
-        Text(text = "User not found")
+        Text(text = stringResource(id = R.string.user_not_found))
         return
     }
 
@@ -73,6 +75,8 @@ fun ChatScreenContent(
 
     val scrollState = rememberLazyListState(initialFirstVisibleItemIndex = messages.size)
 
+    val userBlocked = stringResource(id = R.string.user_blocked)
+
     LaunchedEffect(messages) {
         if (messages.isNotEmpty()) {
             scrollState.scrollToItem(index = messages.size - 1)
@@ -89,7 +93,7 @@ fun ChatScreenContent(
             title = opponentName,
             description = opponentStatus.lowercase(),
             onMoreDropDownBlockUserClick = {
-                Toast.makeText(context, "User Blocked", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, userBlocked, Toast.LENGTH_SHORT).show()
             },
             navController = navController
         )

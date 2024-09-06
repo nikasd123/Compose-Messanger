@@ -1,10 +1,14 @@
 package com.kaz4.composemessanger.ui.auth
 
+import android.app.Application
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kaz4.composemessanger.R
 import com.kaz4.composemessanger.domain.use_cases.AuthUseCase
 import com.kaz4.composemessanger.domain.use_cases.RegisterUserUseCase
+import dagger.hilt.android.internal.Contexts.getApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,8 +19,12 @@ import javax.inject.Inject
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val authUseCase: AuthUseCase,
-    private val registerUserUseCase: RegisterUserUseCase
+    private val registerUserUseCase: RegisterUserUseCase,
+    private val application: Application
 ) : ViewModel() {
+
+    private val context: Context
+        get() = getApplication(application)
 
     private val _state = MutableStateFlow(AuthState())
     val state: StateFlow<AuthState> = _state
@@ -71,7 +79,7 @@ class AuthViewModel @Inject constructor(
                 }
             } else {
                 _state.update {
-                    it.copy(isLoading = false, errorMessage = "Verification failed")
+                    it.copy(isLoading = false, errorMessage = context.getString(R.string.verification_failed))
                 }
             }
         }
@@ -84,7 +92,7 @@ class AuthViewModel @Inject constructor(
             if (response != null) {
                 _state.update { it.copy(isLoading = false, errorMessage = null) }
             } else {
-                _state.update { it.copy(isLoading = false, errorMessage = "Registration failed") }
+                _state.update { it.copy(isLoading = false, errorMessage = context.getString(R.string.registration_failed)) }
             }
         }
     }

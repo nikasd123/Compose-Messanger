@@ -3,7 +3,6 @@ package com.kaz4.composemessanger.ui.chat.chatinput
 import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.focusable
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -33,8 +32,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
+import com.kaz4.composemessanger.R
 import com.kaz4.composemessanger.ui.theme.spacing
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -50,7 +51,11 @@ internal fun ChatInput(
     var input by remember { mutableStateOf(TextFieldValue("")) }
     val textEmpty: Boolean by derivedStateOf { input.text.isEmpty() }
 
-    val imePaddingValues = PaddingValues()
+    val emojiClicked = stringResource(id = R.string.emoji_clicked)
+    val attachFileClicked = stringResource(id = R.string.attach_file_clicked)
+    val cameraClicked = stringResource(id = R.string.camera_clicked)
+    val soundRecorderClicked = stringResource(id = R.string.sound_recorder_clicked)
+
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -70,13 +75,13 @@ internal fun ChatInput(
                 disabledIndicatorColor = Color.Transparent
             ),
             placeholder = {
-                Text(text = "Message")
+                Text(text = stringResource(id = R.string.message_placeholder))
             },
             leadingIcon = {
                 IconButton(onClick = {
                     Toast.makeText(
                         context,
-                        "Emoji Clicked.\n(Not Available)",
+                        emojiClicked,
                         Toast.LENGTH_SHORT
                     ).show()
                 }) {
@@ -88,7 +93,7 @@ internal fun ChatInput(
                     IconButton(onClick = {
                         Toast.makeText(
                             context,
-                            "Attach File Clicked.\n(Not Available)",
+                            attachFileClicked,
                             Toast.LENGTH_SHORT
                         ).show()
                     }) {
@@ -97,7 +102,7 @@ internal fun ChatInput(
                     IconButton(onClick = {
                         Toast.makeText(
                             context,
-                            "Camera Clicked.\n(Not Available)",
+                            cameraClicked,
                             Toast.LENGTH_SHORT
                         ).show()
                     }) {
@@ -117,7 +122,7 @@ internal fun ChatInput(
                 } else {
                     Toast.makeText(
                         context,
-                        "Sound Recorder Clicked.\n(Not Available)",
+                        soundRecorderClicked,
                         Toast.LENGTH_SHORT
                     ).show()
                 }

@@ -34,12 +34,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.kaz4.composemessanger.R
 import com.kaz4.composemessanger.ui.theme.spacing
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -53,6 +55,10 @@ fun ChatAppBar(
 ) {
     val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
+
+    val videoChatClicked = stringResource(id = R.string.videochat_clicked)
+    val voiceChatClicked = stringResource(id = R.string.voicechat_clicked)
+
     SmallTopAppBar(
         modifier = modifier,
         title = {
@@ -95,7 +101,7 @@ fun ChatAppBar(
             Icon(
                 modifier = Modifier.clickable { navController.navigateUp() },
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = "Localized description"
+                contentDescription = stringResource(id = R.string.flag)
             )
         },
         actions = {
@@ -103,7 +109,7 @@ fun ChatAppBar(
                 onClick = {
                     Toast.makeText(
                         context,
-                        "Videochat Clicked.\n(Not Available)",
+                        videoChatClicked,
                         Toast.LENGTH_SHORT
                     ).show()
                 }) {
@@ -113,7 +119,7 @@ fun ChatAppBar(
                 onClick = {
                     Toast.makeText(
                         context,
-                        "Voicechat Clicked.\n(Not Available)",
+                        voiceChatClicked,
                         Toast.LENGTH_SHORT
                     ).show()
                 }) {
@@ -129,7 +135,7 @@ fun ChatAppBar(
                     onDismissRequest = { expanded = false }) {
                     DropdownMenuItem(
                         text = {
-                            Text(text = "Block User")
+                            Text(text = stringResource(id = R.string.block_user))
                         },
                         onClick = {
                             onMoreDropDownBlockUserClick?.invoke()

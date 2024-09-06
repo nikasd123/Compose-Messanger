@@ -13,9 +13,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
+import com.kaz4.composemessanger.R
 import com.kaz4.composemessanger.ui.theme.spacing
 
 @Composable
@@ -28,16 +30,9 @@ fun ProfileTextField(
     keyboardType: KeyboardType = KeyboardType.Text,
     visualTransformation: VisualTransformation = VisualTransformation.None
 ) {
-    var isNameChange by remember {
-        mutableStateOf(false)
-    }
-    var isFocusChange by remember {
-        mutableStateOf(false)
-    }
-    var text by remember {
-        mutableStateOf("")
-    }
-    text = entry
+    var isNameChange by remember { mutableStateOf(false) }
+    var isFocusChange by remember { mutableStateOf(false) }
+    var text by remember { mutableStateOf(entry) }
 
     OutlinedTextField(
         modifier = modifier
@@ -59,10 +54,13 @@ fun ProfileTextField(
     )
 }
 
-fun initProfileMaxLines(hintType: String): Int =
-    if (hintType != "About You") 1 else 5
+@Composable
+private fun isSingleLine(hintType: String): Boolean =
+    hintType != stringResource(id = R.string.hint_about_you)
 
-fun isSingleLine(hintType: String): Boolean = hintType != "About You"
+@Composable
+private fun initProfileMaxLines(hintType: String): Int =
+    if (hintType != stringResource(id = R.string.hint_about_you)) 1 else 5
 
 @Preview(showBackground = true)
 @Composable

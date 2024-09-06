@@ -42,12 +42,14 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.SoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.kaz4.composemessanger.R
 import com.kaz4.composemessanger.domain.models.Avatars
 import com.kaz4.composemessanger.domain.models.ProfileData
 import com.kaz4.composemessanger.ui.profile.components.ChooseProfilePicFromGallery
@@ -167,11 +169,20 @@ fun ProfileContent(
                 Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
                 Text(text = phoneNumber, style = MaterialTheme.typography.bodyMedium)
 
-                ProfileTextField(entry = name, hint = "User Name", onChange = { name = it }, readOnly = true)
-                ProfileTextField(entry = city, hint = "City", onChange = { city = it })
+                ProfileTextField(
+                    entry = name,
+                    hint = stringResource(id = R.string.user_name_hint),
+                    onChange = { name = it },
+                    readOnly = true
+                )
+                ProfileTextField(
+                    entry = city,
+                    hint = stringResource(id = R.string.city_hint),
+                    onChange = { city = it }
+                )
                 ProfileTextField(
                     entry = dateState.value,
-                    hint = "Birth Date",
+                    hint = stringResource(id = R.string.birth_date_hint),
                     onChange = { newValue ->
                         isManualInput = true
                         val formattedDate = newValue.take(8).filter { it.isDigit() }
@@ -192,13 +203,13 @@ fun ProfileContent(
                 )
 
                 Text(
-                    text = "Zodiac Sign: $zodiacSign",
+                    text = stringResource(id = R.string.zodiac_sign_label, zodiacSign),
                     style = MaterialTheme.typography.titleMedium
                 )
 
                 ProfileTextField(
                     entry = bio,
-                    hint = "About You",
+                    hint = stringResource(id = R.string.about_you_hint),
                     onChange = { bio = it }
                 )
 
@@ -217,7 +228,7 @@ fun ProfileContent(
                         onProfileUpdate(updatedUser)
                     }
                 ) {
-                    Text(text = "Save Profile")
+                    Text(text = stringResource(id = R.string.save_profile_button))
                 }
                 Spacer(modifier = Modifier.height(50.dp))
             }
@@ -235,12 +246,13 @@ fun ProfileContent(
                         .padding(5.dp)
                         .align(Alignment.Center),
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "navigate back"
+                    contentDescription = stringResource(id = R.string.navigate_back_description)
                 )
             }
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable

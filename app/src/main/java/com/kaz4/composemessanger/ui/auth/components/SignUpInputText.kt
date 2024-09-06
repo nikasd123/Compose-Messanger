@@ -98,7 +98,7 @@ fun PreviewLoginTextField() {
     UsernameTextField(
         entry = "",
         hint = "Enter your username",
-        onChange = { /* Действие при изменении текста */ }
+        onChange = {  }
     )
 }
 
@@ -108,6 +108,6 @@ fun PreviewPasswordTextField() {
     PasswordTextField(
         entry = "password",
         hint = "Password",
-        onChange = { /* Действие при изменении текста */ }
+        onChange = {  }
     )
 }

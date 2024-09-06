@@ -1,11 +1,15 @@
 package com.kaz4.composemessanger.ui.profile
 
+import android.app.Application
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kaz4.composemessanger.R
 import com.kaz4.composemessanger.domain.models.Avatar
 import com.kaz4.composemessanger.domain.models.ProfileData
 import com.kaz4.composemessanger.domain.models.UserUpdateRequest
 import com.kaz4.composemessanger.domain.use_cases.ProfileUseCase
+import dagger.hilt.android.internal.Contexts.getApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,8 +19,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val profileUseCase: ProfileUseCase
+    private val profileUseCase: ProfileUseCase,
+    private val application: Application
 ) : ViewModel() {
+
+    private val context: Context
+        get() = getApplication(application)
 
     private val _state = MutableStateFlow(ProfileState())
     val state: StateFlow<ProfileState> = _state
@@ -45,7 +53,8 @@ class ProfileViewModel @Inject constructor(
                     profileUseCase.saveUserProfileLocally(profileData)
                 } ?: run {
                     _state.update {
-                        it.copy(isLoading = false, errorMessage = "Failed to load user profile")
+                        it.copy(isLoading = false, errorMessage = context.getString(
+                            R.string.load_profile_error))
                     }
                 }
             }
@@ -61,12 +70,14 @@ class ProfileViewModel @Inject constructor(
             val updatedProfile = profileUseCase.updateUserInfo(convertToUserUpdateRequest(profileData))
             updatedProfile?.let { profile ->
                 _state.update { state ->
-                    state.copy(isLoading = false, userProfile = profile, successMessage = "Profile updated successfully")
+                    state.copy(isLoading = false, userProfile = profile, successMessage = context.getString(
+                        R.string.load_profile_success))
                 }
                 profileUseCase.saveUserProfileLocally(profile)
             } ?: run {
                 _state.update {
-                    it.copy(isLoading = false, errorMessage = "Failed to update profile")
+                    it.copy(isLoading = false, errorMessage = context.getString(
+                        R.string.update_profile_error))
                 }
             }
         }
