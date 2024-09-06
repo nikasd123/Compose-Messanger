@@ -31,7 +31,6 @@ fun ProfileTextField(
     visualTransformation: VisualTransformation = VisualTransformation.None
 ) {
     var isNameChange by remember { mutableStateOf(false) }
-    var text by remember { mutableStateOf(entry) }
 
     OutlinedTextField(
         modifier = modifier
@@ -39,9 +38,8 @@ fun ProfileTextField(
             .wrapContentHeight()
             .padding(top = MaterialTheme.spacing.medium),
         label = { Text(text = hint) },
-        value = text,
+        value = entry,
         onValueChange = {
-            text = it
             onChange(it)
             isNameChange = true
         },

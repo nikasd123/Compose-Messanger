@@ -55,6 +55,12 @@ fun formatDateForServer(date: String): String? {
             return null
         }
 
+        val normalizedDate = if (date.length == 8 && date.all { it.isDigit() }) {
+            "${date.take(2)}.${date.substring(2, 4)}.${date.takeLast(4)}"
+        } else {
+            date
+        }
+
         val formatters = listOf(
             DateTimeFormatter.ofPattern("yyyy-MM-dd"),
             DateTimeFormatter.ofPattern("yyyy.MM.dd"),
@@ -64,7 +70,7 @@ fun formatDateForServer(date: String): String? {
 
         val localDate = formatters.asSequence().mapNotNull { formatter ->
             try {
-                LocalDate.parse(date, formatter)
+                LocalDate.parse(normalizedDate, formatter)
             } catch (e: DateTimeParseException) {
                 null
             }
