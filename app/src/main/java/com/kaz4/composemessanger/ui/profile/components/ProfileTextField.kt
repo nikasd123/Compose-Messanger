@@ -13,7 +13,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,13 +20,12 @@ import com.kaz4.composemessanger.ui.theme.spacing
 
 @Composable
 fun ProfileTextField(
+    modifier: Modifier = Modifier,
     entry: String,
     hint: String,
     onChange: (String) -> Unit = {},
     keyboardType: KeyboardType = KeyboardType.Text,
-    modifier: Modifier = Modifier,
-    visualTransformation: VisualTransformation = VisualTransformation.None,
-    keyboardController: SoftwareKeyboardController? = null
+    visualTransformation: VisualTransformation = VisualTransformation.None
 ) {
     var isNameChange by remember {
         mutableStateOf(false)
@@ -52,6 +50,7 @@ fun ProfileTextField(
             onChange(it)
             isNameChange = true
         },
+        visualTransformation = visualTransformation,
         singleLine = isSingleLine(hint),
         maxLines = initProfileMaxLines(hint),
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType)

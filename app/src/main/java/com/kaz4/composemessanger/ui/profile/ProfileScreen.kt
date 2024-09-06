@@ -15,12 +15,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -30,7 +31,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,6 +43,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -51,10 +52,10 @@ import com.kaz4.composemessanger.domain.models.Avatars
 import com.kaz4.composemessanger.domain.models.ProfileData
 import com.kaz4.composemessanger.ui.profile.components.ChooseProfilePicFromGallery
 import com.kaz4.composemessanger.ui.profile.components.ProfileTextField
-import com.kaz4.composemessanger.ui.profile.util.DateVisualTransformation
+import com.kaz4.composemessanger.ui.profile.util.birthDateVisualTransformation
 import com.kaz4.composemessanger.ui.profile.util.formatDateForServer
-import com.kaz4.composemessanger.ui.profile.util.formatDateInputWithCursor
 import com.kaz4.composemessanger.ui.profile.util.getZodiacSign
+import com.kaz4.composemessanger.ui.theme.ComposeMessangerTheme
 import com.kaz4.composemessanger.ui.theme.spacing
 
 @Composable
@@ -119,14 +120,22 @@ fun ProfileContent(
     val phoneNumber by remember { mutableStateOf(userProfile.phone) }
     var avatarUri by remember { mutableStateOf<Uri?>(null) }
 
-    val dateState = remember { mutableStateOf(birthDate) }
-    val cursorPosition = remember { mutableStateOf(0) }
+    val dateState = remember { mutableStateOf(userProfile.birthday ?: "") }
     var isDateFieldFocused by remember { mutableStateOf(false) }
+    var zodiacSign by remember { mutableStateOf("") }
+
+    var isManualInput by remember { mutableStateOf(false) }
 
     val scrollState = rememberScrollState()
 
-    val zodiacSign by remember {
-        derivedStateOf { getZodiacSign(formatDateForServer(dateState.value)) }
+    LaunchedEffect(dateState.value) {
+        val formattedDate = if (dateState.value.length == 8) {
+            "${dateState.value.take(2)}.${dateState.value.substring(2, 4)}.${dateState.value.takeLast(4)}"
+        } else {
+            dateState.value
+        }
+
+        zodiacSign = getZodiacSign(formattedDate)
     }
 
     Column(
@@ -164,21 +173,16 @@ fun ProfileContent(
                     entry = dateState.value,
                     hint = "Birth Date",
                     onChange = { newValue ->
-                        val (formattedDate, newCursorPosition) = formatDateInputWithCursor(
-                            newValue,
-                            cursorPosition.value
-                        )
+                        isManualInput = true
+                        val formattedDate = newValue.take(8).filter { it.isDigit() }
                         dateState.value = formattedDate
-                        cursorPosition.value = newCursorPosition
                     },
                     keyboardType = KeyboardType.Number,
-                    visualTransformation = DateVisualTransformation(),
-                    keyboardController = keyboardController,
+                    visualTransformation = if (isManualInput) birthDateVisualTransformation() else VisualTransformation.None,
                     modifier = Modifier.onFocusChanged { focusState ->
                         if (focusState.isFocused) {
                             if (!isDateFieldFocused) {
                                 dateState.value = ""
-                                cursorPosition.value = 0
                                 isDateFieldFocused = true
                             }
                         } else {
@@ -186,6 +190,7 @@ fun ProfileContent(
                         }
                     }
                 )
+
                 Text(
                     text = "Zodiac Sign: $zodiacSign",
                     style = MaterialTheme.typography.titleMedium
@@ -217,8 +222,11 @@ fun ProfileContent(
                 Spacer(modifier = Modifier.height(50.dp))
             }
             Box(
-                modifier = Modifier
-                    .padding(top = 20.dp)
+                modifier = Modifier.statusBarsPadding()
+                    .padding(
+                        top = MaterialTheme.spacing.small,
+                        start = MaterialTheme.spacing.extraSmall
+                    )
                     .clickable { onBackButton() }
             ) {
                 Icon(
@@ -226,7 +234,7 @@ fun ProfileContent(
                         .requiredSize(50.dp)
                         .padding(5.dp)
                         .align(Alignment.Center),
-                    imageVector = Icons.Filled.ArrowBack,
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "navigate back"
                 )
             }
@@ -271,5 +279,47 @@ fun PreviewProfileScreen() {
             userProfile = hardcodedProfileData,
             onBackButton = {}
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewDarkProfileScreen() {
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    val hardcodedProfileData = ProfileData(
+        name = "John Doe",
+        username = "johndoe",
+        birthday = "1990-01-01",
+        city = "New York",
+        vk = "https://vk.com/johndoe",
+        instagram = "https://instagram.com/johndoe",
+        status = "Active",
+        avatar = "https://example.com/avatar.jpg",
+        id = 123,
+        last = "2024-09-04T12:03:39.722Z",
+        online = true,
+        created = "2024-01-01T12:00:00.000Z",
+        phone = "+1234567890",
+        completedTask = 42,
+        avatars = Avatars(
+            avatar = "https://example.com/avatar.jpg",
+            bigAvatar = "https://example.com/big_avatar.jpg",
+            miniAvatar = "https://example.com/mini_avatar.jpg",
+            filename = "",
+            base64 = ""
+        )
+    )
+
+
+    if (keyboardController != null) {
+        ComposeMessangerTheme (darkTheme = true) {
+            ProfileContent(
+                keyboardController = keyboardController,
+                onProfileUpdate = { },
+                userProfile = hardcodedProfileData,
+                onBackButton = {}
+            )
+        }
     }
 }

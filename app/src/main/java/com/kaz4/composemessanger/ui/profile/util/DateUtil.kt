@@ -8,61 +8,50 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
-fun formatDateInputWithCursor(input: String, initialCursorPosition: Int): Pair<String, Int> {
-    val digitsOnly = input.replace(Regex("[^0-9]"), "")
-
-    val formatted = StringBuilder()
-    var cursorPosition = initialCursorPosition
-    var numOfDots = 0
-
-    for (i in digitsOnly.indices) {
-        if (i == 2 || i == 4) {
-            formatted.append('.')
-            numOfDots++
-            if (i < initialCursorPosition) {
-                cursorPosition++
-            }
+fun birthDateVisualTransformation(): VisualTransformation =
+    VisualTransformation { text ->
+        val trimmed = if (text.text.length >= 8) {
+            text.text.substring(0, 8)
+        } else {
+            text.text
         }
-        formatted.append(digitsOnly[i])
-    }
 
-    if (cursorPosition > formatted.length) {
-        cursorPosition = formatted.length
-    }
+        val formatted = buildString {
+            append(trimmed.take(2))
+            if (trimmed.length > 2) append("-")
+            append(trimmed.drop(2).take(2))
+            if (trimmed.length > 4) append("-")
+            append(trimmed.drop(4))
+        }
 
-    return formatted.toString() to cursorPosition
-}
+        val originalToTransformed = object : OffsetMapping {
+            override fun originalToTransformed(offset: Int): Int =
+                when {
+                    offset <= 2 -> offset
+                    offset <= 4 -> offset + 1
+                    offset <= 8 -> offset + 2
+                    else -> formatted.length
+                }
 
-class DateVisualTransformation : VisualTransformation {
-    override fun filter(text: AnnotatedString): TransformedText {
-        val formattedText = formatDateInput(text.text)
-        return TransformedText(
-            text = AnnotatedString(formattedText),
-            offsetMapping = object : OffsetMapping {
-                override fun originalToTransformed(offset: Int): Int = offset
-                override fun transformedToOriginal(offset: Int): Int = offset
-            }
+            override fun transformedToOriginal(offset: Int): Int =
+                when {
+                    offset <= 2 -> offset
+                    offset <= 5 -> offset - 1
+                    offset <= 10 -> offset - 2
+                    else -> text.text.length
+                }
+        }
+
+        TransformedText(
+            text = AnnotatedString(formatted),
+            offsetMapping = originalToTransformed
         )
     }
-}
 
-fun formatDateInput(input: String): String {
-    val cleanedInput = input.replace(Regex("[^0-9]"), "")
-    val sb = StringBuilder()
-
-    for (i in cleanedInput.indices) {
-        if (i == 2 || i == 4) {
-            sb.append('.')
-        }
-        sb.append(cleanedInput[i])
-    }
-
-    return sb.toString()
-}
 
 fun formatDateForServer(date: String): String? {
     return try {
-        if (date.isNullOrEmpty()) {
+        if (date.isEmpty()) {
             return null
         }
 
