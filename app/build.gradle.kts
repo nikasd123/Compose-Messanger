@@ -1,8 +1,9 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-    id ("kotlin-kapt")
+    alias(libs.plugins.compose.compiler)
     id ("dagger.hilt.android.plugin")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -32,14 +33,14 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_19
+        targetCompatibility = JavaVersion.VERSION_19
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "19"
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.2"
+        kotlinCompilerExtensionVersion = "2.0.20"
     }
     buildFeatures {
         compose = true
@@ -53,6 +54,7 @@ android {
 }
 
 dependencies {
+    implementation(kotlin("stdlib-jdk8"))
 
     //Navigation
     implementation (libs.androidx.navigation.compose)
@@ -70,9 +72,9 @@ dependencies {
 
     //Dagger-hilt
     implementation (libs.hilt.android)
-    kapt (libs.hilt.android.compiler)
+    ksp (libs.hilt.android.compiler)
     implementation (libs.androidx.hilt.navigation.compose)
-    kapt (libs.androidx.hilt.compiler)
+    ksp (libs.androidx.hilt.compiler)
 
     //Retrofit
     implementation (libs.retrofit)
