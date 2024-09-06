@@ -24,6 +24,7 @@ fun ProfileTextField(
     entry: String,
     hint: String,
     onChange: (String) -> Unit = {},
+    readOnly: Boolean = false,
     keyboardType: KeyboardType = KeyboardType.Text,
     visualTransformation: VisualTransformation = VisualTransformation.None
 ) {
@@ -50,6 +51,7 @@ fun ProfileTextField(
             onChange(it)
             isNameChange = true
         },
+        readOnly = readOnly,
         visualTransformation = visualTransformation,
         singleLine = isSingleLine(hint),
         maxLines = initProfileMaxLines(hint),

@@ -167,7 +167,7 @@ fun ProfileContent(
                 Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
                 Text(text = phoneNumber, style = MaterialTheme.typography.bodyMedium)
 
-                ProfileTextField(entry = name, hint = "User Name", onChange = { name = it })
+                ProfileTextField(entry = name, hint = "User Name", onChange = { name = it }, readOnly = true)
                 ProfileTextField(entry = city, hint = "City", onChange = { city = it })
                 ProfileTextField(
                     entry = dateState.value,
